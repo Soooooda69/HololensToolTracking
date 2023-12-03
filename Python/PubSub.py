@@ -23,7 +23,9 @@ class ZMQManager:
         context = zmq.Context()
         subscriber = context.socket(zmq.SUB)
         subscriber.connect(f"tcp://{self.sub_ip}:{self.sub_port}")
-
+        
+        subscriber.setsockopt(zmq.RCVTIMEO, 1000)
+        
         if isinstance(self.sub_topic, str):
             self.sub_topic = self.sub_topic.encode()
 
@@ -33,8 +35,8 @@ class ZMQManager:
         return context, subscriber
 
     @staticmethod
-    def process_message(message):
-        return f"Processed {message}"
+    def process_message(topic, message):
+        return topic + f"{message}"
 
     def subscriber_thread(self):
         sub_context, sub_socket = self.initialize_subscriber()
@@ -42,7 +44,10 @@ class ZMQManager:
             if self.connected:
                 try:
                     topic, message = sub_socket.recv_multipart()
-                    print(f"Received: {message.decode('utf-8')}")
+                    print(f"{topic.decode('utf-8')}: {message.decode('utf-8')}")
+                except zmq.Again:
+                    print('No message received within our timeout period')
+                #     self.connected = False
                 except KeyboardInterrupt:
                     self.connected = False
             else:
@@ -55,12 +60,10 @@ class ZMQManager:
         pub_context, pub_socket = self.initialize_publisher()
         while True:
             if self.connected:
-                try:
-                    processed_message = ZMQManager.process_message(time.time())
-                    pub_socket.send_multipart([self.pub_topic, processed_message.encode('utf-8')])
-                    # print(f"Published: {processed_message}")
-                except KeyboardInterrupt:
-                    self.connected = False
+                for topic in self.pub_topic:
+                    message = self.process_message(f'{topic}', time.time())
+                    pub_socket.send_multipart([topic, message.encode('utf-8')])
+
             else:
                 print("Publisher thread interrupted, cleaning up...")
                 pub_socket.close()
@@ -69,28 +72,27 @@ class ZMQManager:
         
     def run(self):
         self.connected = True
-        sub_thread = threading.Thread(target=self.subscriber_thread)
         pub_thread = threading.Thread(target=self.publisher_thread)
+        sub_thread = threading.Thread(target=self.subscriber_thread)
         sub_thread.start()
         pub_thread.start()
         
-        while True:
-            try:
-                pass
-            except KeyboardInterrupt:
-                self.connected = False
-                time.sleep(0.1)
-                print("Main thread interrupted, cleaning up...")
-                sub_thread.join()
-                pub_thread.join()
-                break
+        try:
+            while True:
+                pass         
+        except KeyboardInterrupt:
+            self.connected = False
+            time.sleep(0.1)
+            print("Main thread interrupted, cleaning up...")
+            sub_thread.join()
+            pub_thread.join()
 
 if __name__ == "__main__":
     sub_ip = "192.168.1.23"
     sub_port = "5588"
     pub_port = "5589"
-    sub_topic = [b"topic1"]
-    pub_topic = b"topic2"
+    sub_topic = [b"Tool 1", b"Tool 2", b"Tool 3"]
+    pub_topic = [b"topic2",b"topic3",b"topic4"]
 
     zmq_manager = ZMQManager(sub_ip, sub_port, pub_port, sub_topic, pub_topic)
     zmq_manager.run()
