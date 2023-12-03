@@ -9,6 +9,6 @@ public class ZMQPublisherHelper : MonoBehaviour
 
     public string[] GetPublisherInfo()
     {
-        return new string[] { Port.text[..^1] };
+       return new string[] { Port.text[..^1] };
     }
 }

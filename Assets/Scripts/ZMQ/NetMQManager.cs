@@ -19,7 +19,10 @@ public class NetMQManager : MonoBehaviour
     private List<GameObject> AllNodes;
     private List<PublisherSample> PubNodes = new List<PublisherSample> { };
     private List<SubscriberSample> SubNodes = new List<SubscriberSample> { };
-
+    public float PubFrequency = 30.0f;
+    public float SubFrequency = 30.0f;
+    public int SubSockerBufferSize = 1000;
+    public int PubSocketBufferSize = 1000;
     void Start()
     {
         debugConsole = GameObject.FindObjectOfType<DebugConsole>();
@@ -46,13 +49,13 @@ public class NetMQManager : MonoBehaviour
             if (node.tag == "PubNode")
             {
                 string[] info = node.GetComponent<ZMQPublisherHelper>().GetPublisherInfo();
-                PubNodes.Add(new PublisherSample(node.name, info[0], node.GetComponent<DataBuffer>()));
+                PubNodes.Add(new PublisherSample(node.name, info[0], node.GetComponent<DataBuffer>(), PubFrequency, PubSocketBufferSize));
             }
             else if (node.tag == "SubNode")
             {
                 string[] SocketInfo, Topics;
                 (SocketInfo,Topics) = node.GetComponent<ZMQSubscriberHelper>().GetSubscriberInfo();
-                SubNodes.Add(new SubscriberSample(node.name, SocketInfo[0], SocketInfo[1], Topics, node.GetComponent<DataBuffer>()));
+                SubNodes.Add(new SubscriberSample(node.name, SocketInfo[0], SocketInfo[1], Topics, node.GetComponent<DataBuffer>(),SubFrequency, SubSockerBufferSize));
             }
         }
         AsyncIO.ForceDotNet.Force();
@@ -98,27 +101,33 @@ public class NetMQManager : MonoBehaviour
 
 public struct PublisherSample
 {
-    public PublisherSample(string name, string port, DataBuffer buffer)
+    public PublisherSample(string name, string port, DataBuffer buffer, float frequency, int buffersize)
     {
         Name = name;
         Port = port;
-        Buffer = buffer; 
+        Buffer = buffer;
+        Frequency = frequency;
+        BufferSize = buffersize;
     }
 
     public string Name { get; }
     public string Port { get; }
     public DataBuffer Buffer { get; }
+    public float Frequency { get; }
+    public int BufferSize { get; }
 }
 
 public struct SubscriberSample
 {
-    public SubscriberSample(string name, string ip, string port, string[] topics, DataBuffer buffer)
+    public SubscriberSample(string name, string ip, string port, string[] topics, DataBuffer buffer, float frequency, int buffersize)
     {
         Name = name;
         IP = ip;
         Port = port;
         Topics = topics;
         Buffer = buffer;
+        Frequency = frequency;
+        BufferSize = buffersize;
     }
 
     public string Name { get; }
@@ -126,5 +135,7 @@ public struct SubscriberSample
     public string Port { get; }
     public string[] Topics { get; }
     public DataBuffer Buffer { get; }
+    public float Frequency { get; }
+    public int BufferSize { get; }
 }
 

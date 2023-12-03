@@ -31,17 +31,7 @@ public class SampleProcess : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // get {
-        //         float[] coordinates = new float[sphere_count*3];
-        //         int cur_coord = 0;
-        //         for (int i = 0; i< sphere_count; i++) {
-        //             coordinates[cur_coord] = spheres[i].transform.localPosition.x;
-        //             coordinates[cur_coord + 1] = spheres[i].transform.localPosition.y;
-        //             coordinates[cur_coord + 2] = spheres[i].transform.localPosition.z;
-        //             cur_coord += 3;
-        //         }
-        //         return coordinates;
-        //     }
+  
         tools_coordinates = new float[tool_count*6];
         int cur_coord = 0;
         for (int i = 0; i< tool_count; i++) {

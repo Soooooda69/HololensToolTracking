@@ -14,25 +14,44 @@ public class ZMQSubscriber
     public string IP { get; private set; }
     public string Port { get; private set; }
     public SubscriberSocket subSocket;
-    private NetMQPoller poller;
     private List<byte[]> buffer;
     private DataBuffer databuffer;
-
-    public ZMQSubscriber(string ip, string port, string[] topicArray, DataBuffer databuffer)
+    public float Frequency = 30;
+    private float millisecondsPerOperation;
+    private DateTime lastOperationTime;
+    private string receivedTopic;
+    private byte[] receivedMessage;
+    public ZMQSubscriber(string ip, string port, string[] topicArray, DataBuffer databuffer, float frequency, int BufferSize = 1000)
     {
         IP = ip;
         Port = port;
         Topics = topicArray;
         subSocket = new SubscriberSocket();
-        subSocket.Options.ReceiveHighWatermark = 1000;
+        subSocket.Options.ReceiveHighWatermark = BufferSize;
+        subSocket.ReceiveReady += OnReceiveReady;
         subSocket.Connect($"tcp://{IP}:{Port}");
+
         foreach (string topic in Topics)
         {
             subSocket.Subscribe(Encoding.UTF8.GetBytes(topic));
         }
-        subSocket.ReceiveReady += OnReceiveReady;
+
         this.databuffer = databuffer;
+        Frequency = frequency;
+        lastOperationTime = DateTime.Now;
+        millisecondsPerOperation = 1000 / Frequency;
+/*        timer = new NetMQTimer(millisecondsPerOperation);
+        timer.Elapsed += OnTimerElapsed;*/
     }
+
+/*    private void OnTimerElapsed(object sender, NetMQTimerEventArgs e)
+    {
+
+        if (subscriberSocket.TryReceiveFrameString(out string message))
+        {
+            Console.WriteLine($"Received: {message}");
+        }
+    }*/
 
     public SubscriberSocket GetSubscriberSocket()
     {
@@ -41,11 +60,16 @@ public class ZMQSubscriber
 
     private void OnReceiveReady(object sender, NetMQSocketEventArgs e)
     {
-        if (subSocket.TryReceiveMultipartBytes(TimeSpan.FromSeconds(0.1), ref buffer))
+        if ((DateTime.Now - lastOperationTime).TotalMilliseconds >= millisecondsPerOperation)
         {
-            var receivedTopic = Encoding.UTF8.GetString(buffer[0]);
-            var receivedMessage = buffer[1];
+            //while (subSocket.TryReceiveMultipartBytes(TimeSpan.FromSeconds(0.001), ref buffer))
+            while (subSocket.TryReceiveMultipartBytes(ref buffer))
+            {
+                receivedTopic = Encoding.UTF8.GetString(buffer[0]);
+                receivedMessage = buffer[1];
+            }
             MainThreadDispatcher.Enqueue(() => ProcessMessage(receivedTopic, receivedMessage));
+            lastOperationTime = DateTime.Now;
         }
     }
 

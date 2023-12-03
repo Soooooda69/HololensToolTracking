@@ -33,28 +33,28 @@ public class AsycNetMQ
         poller.RunAsync();
     }
 
-    public void CreatePublisherSocket(string socketName, string port, DataBuffer buffer)
+    public void CreatePublisherSocket(string socketName, string port, DataBuffer buffer, float frequency, int buffersize)
     {
-        var pubSocket = new ZMQPublisher(port, buffer);
+        var pubSocket = new ZMQPublisher(port, buffer, frequency, buffersize);
         publishers[socketName] = pubSocket;
         poller.Add(pubSocket.pubSocket);
     }
 
-    public void CreateSubscriberSocket(string socketName, string ip, string port, string[] topic, DataBuffer buffer)
+    public void CreateSubscriberSocket(string socketName, string ip, string port, string[] topic, DataBuffer buffer, float frequency, int buffersize)
     {
-        var subSocket = new ZMQSubscriber(ip, port, topic, buffer);
+        var subSocket = new ZMQSubscriber(ip, port, topic, buffer, frequency, buffersize);
         subscribers[socketName] = subSocket;
         poller.Add(subSocket.subSocket);
     }
 
     public void CreateSubscriberSocketFromSample(SubscriberSample sample)
     {
-        CreateSubscriberSocket(sample.Name, sample.IP, sample.Port, sample.Topics,sample.Buffer);
+        CreateSubscriberSocket(sample.Name, sample.IP, sample.Port, sample.Topics,sample.Buffer, sample.Frequency, sample.BufferSize);
     }
 
     public void CreatePublisherSocketFromSample(PublisherSample sample)
     {
-        CreatePublisherSocket(sample.Name, sample.Port, sample.Buffer);
+        CreatePublisherSocket(sample.Name, sample.Port, sample.Buffer, sample.Frequency, sample.BufferSize);
     }
 
     private void StartMonitoring(NetMQSocket socket, string monitorAddress)
@@ -76,7 +76,7 @@ public class AsycNetMQ
 
     public void Cleanup()
     {
-        poller?.Stop();
+        poller?.StopAsync();
         poller?.Dispose();
         foreach (var publisher in publishers.Values)
         {
