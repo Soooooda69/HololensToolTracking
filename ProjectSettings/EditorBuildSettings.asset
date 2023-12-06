@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TrackingSample.unity
     guid: 1952f9f5bd184f4418ed47df04060c8c
+  - enabled: 1
+    path: Assets/Scenes/CommunicationSample.unity
+    guid: beadf6e2861dc364f8feedb6998dafd4
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: a9b2142c24aad574eb8f369b110105ca,
       type: 2}

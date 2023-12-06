@@ -30,13 +30,14 @@ public class SampleProcess : MonoBehaviour
 
     private float[] ObtainToolCoordinates(GameObject tool)
     {
-        float[] tool_coordinates = new float[6];
+        float[] tool_coordinates = new float[7];
         tool_coordinates[0] = tool.transform.localPosition.x;
         tool_coordinates[1] = tool.transform.localPosition.y;
         tool_coordinates[2] = tool.transform.localPosition.z;
         tool_coordinates[3] = tool.transform.localRotation.x;
         tool_coordinates[4] = tool.transform.localRotation.y;
         tool_coordinates[5] = tool.transform.localRotation.z;
+        tool_coordinates[6] = tool.transform.localRotation.w;
         return tool_coordinates;
     }
 
