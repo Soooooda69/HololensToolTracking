@@ -61,6 +61,15 @@ public class SampleProcess : MonoBehaviour
             tools_coordinates = ObtainToolCoordinates(tools[i]); 
             // Convert the float[] to string.
             string toolPoseString = string.Join(",", tools_coordinates.Select(f => f.ToString("F4")));
+            if (tools[i].tag != "InTrack")
+            {
+                toolPoseString += "," + "0";
+            }
+            else
+            {
+                toolPoseString += "," + "1";
+            }
+            
             //For publishers, you need to give the databuffer the (topic,message) pair. The buffer will enqueue the message and will sent as soon as possible.
             string topic_name = tools[i].name;
             PubBuffer.UpdateOrAddMessage(topic_name, Encoding.UTF8.GetBytes(toolPoseString));

@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Phantom
+  - SubNode
+  - PubNode
+  - inTrack
+  - loseTrack
   layers:
   - Default
   - TransparentFX

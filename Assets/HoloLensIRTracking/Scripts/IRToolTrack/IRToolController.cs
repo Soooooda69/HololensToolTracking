@@ -48,9 +48,8 @@ namespace IRToolTrack
                     cur_coord += 3;
                 }
                 return coordinates;
-            }
+                }
         }
-
 
         void Start()
         {
@@ -116,6 +115,16 @@ namespace IRToolTrack
                 return;
             Int64 trackingTimestamp = irToolTracking.GetTimestamp();
             float[] tool_transform = irToolTracking.GetToolTransform(identifier);
+
+            if (tool_transform[7]!=0)
+            {
+                gameObject.tag = "InTrack";
+            }
+            else
+            {
+                gameObject.tag = "LoseTrack";
+            }
+
             if (tool_transform != null && tool_transform[0]!= float.NaN && tool_transform[7]!=0 && lastUpdate<trackingTimestamp)
             {
                 if (!childrenActive)
