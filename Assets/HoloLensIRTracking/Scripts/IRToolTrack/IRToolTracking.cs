@@ -12,6 +12,7 @@ using HL2IRToolTracking;
 
 public class IRToolTracking : MonoBehaviour
 {
+    // private DebugConsole debugConsole;
 #if ENABLE_WINMD_SUPPORT
     HL2IRTracking toolTracking;
 #endif
@@ -19,6 +20,14 @@ public class IRToolTracking : MonoBehaviour
 
     private IRToolController[] tools = null;
 
+    public bool GetTrackingStatus()
+    {
+#if ENABLE_WINMD_SUPPORT
+        return toolTracking.IsTrackingTools();
+#endif
+        return false;
+    }
+    
     public float[] GetToolTransform(string identifier)
     {
         var toolTransform = Enumerable.Repeat<float>(0, 8).ToArray();
@@ -41,6 +50,7 @@ public class IRToolTracking : MonoBehaviour
     public void Start()
     {
         //Find Tool Controllers and add them to the tracking
+        // debugConsole = FindObjectOfType<DebugConsole>();
         tools = FindObjectsOfType<IRToolController>();
         StartToolTracking();
     }

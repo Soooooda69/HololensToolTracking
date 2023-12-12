@@ -41,22 +41,20 @@ public class SampleProcess : MonoBehaviour
         return tool_coordinates;
     }
 
+    private void UpdateToolCoordinates(GameObject tool, byte[] poseMessage)
+    {
+        string poseString = Encoding.UTF8.GetString(poseMessage);
+        float[] toolCoordinates = poseString.Split(',').Select(float.Parse).ToArray();
+        Vector3 position = new Vector3(toolCoordinates[0], toolCoordinates[1], toolCoordinates[2]);
+        Quaternion rotation = new Quaternion(toolCoordinates[3], toolCoordinates[4], toolCoordinates[5], toolCoordinates[6]);
+        tool.transform.localPosition = position;
+        tool.transform.localRotation = rotation;
+    }
+
     // Update is called once per frame
     void Update()
     {
-  
-        // tools_coordinates = new float[tool_count*6];
-        // int cur_coord = 0;
-        // for (int i = 0; i< tool_count; i++) {
-        //     tools_coordinates[cur_coord] = tools[i].transform.localPosition.x;
-        //     tools_coordinates[cur_coord + 1] = tools[i].transform.localPosition.y;
-        //     tools_coordinates[cur_coord + 2] = tools[i].transform.localPosition.z;
-        //     tools_coordinates[cur_coord + 3] = tools[i].transform.localRotation.x;
-        //     tools_coordinates[cur_coord + 4] = tools[i].transform.localRotation.y;
-        //     tools_coordinates[cur_coord + 5] = tools[i].transform.localRotation.z;
-            
-        //     cur_coord += 6;
-        // }
+
         for (int i = 0; i < tool_count; i++){
             tools_coordinates = ObtainToolCoordinates(tools[i]); 
             // Convert the float[] to string.
@@ -86,6 +84,7 @@ public class SampleProcess : MonoBehaviour
                 message = SubBuffer.GetMessage(topic);
                 //Convert the byte[] to your datatype (here is string) and print it in debugConsole.
                 debugConsole.Log(Encoding.UTF8.GetString(message));
+                UpdateToolCoordinates(tools[i], message);
             }
             
         }

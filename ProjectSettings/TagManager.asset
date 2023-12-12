@@ -7,8 +7,8 @@ TagManager:
   - Phantom
   - SubNode
   - PubNode
-  - inTrack
-  - loseTrack
+  - InTrack
+  - LoseTrack
   layers:
   - Default
   - TransparentFX

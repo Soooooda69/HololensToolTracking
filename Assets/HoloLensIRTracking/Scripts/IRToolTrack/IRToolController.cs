@@ -10,7 +10,7 @@ namespace IRToolTrack
 {
     public class IRToolController : MonoBehaviour
     {
-        
+        // private DebugConsole debugConsole;
         public string identifier;
         public GameObject[] spheres;
         public bool disableUntilDetection = false;
@@ -20,7 +20,7 @@ namespace IRToolTrack
         public int max_occluded_spheres = 0;
         public float lowpass_factor_rotation = 0.3f;
         public float lowpass_factor_position = 0.6f;
-
+        
         private bool childrenActive = true;
 
         private IRToolTracking irToolTracking;
@@ -50,11 +50,13 @@ namespace IRToolTrack
                 return coordinates;
                 }
         }
-
         void Start()
         {
+            tag = "LoseTrack";
             childAtIndexActive = new bool[transform.childCount];
             irToolTracking = FindObjectOfType<IRToolTracking>();
+            // debugConsole = FindObjectOfType<DebugConsole>();
+            // debugConsole = irToolTracking.debugConsole;
 #if !UNITY_EDITOR
             if (disableUntilDetection)
             {
@@ -89,11 +91,11 @@ namespace IRToolTrack
         {
             if (_subStatus == Status.Active)
             {
-                Debug.Log("Tool tracking already started.");
+                // debugConsole.Log("Tool tracking already started.");
                 return;
             }
             //_listener.Start();
-            Debug.Log("Started tracking "+identifier);
+            // debugConsole.Log("Started tracking "+identifier);
             _subStatus = Status.Active;
         }
 
@@ -101,30 +103,32 @@ namespace IRToolTrack
         {
             if (_subStatus == Status.Inactive)
             {
-                Debug.Log("Tracking of "+identifier+" already stopped.");
+                // debugConsole.Log("Tracking of "+identifier+" already stopped.");
                 return;
             }
             //_listener.Stop();
-            Debug.Log("Stopped tracking " + identifier);
+            // debugConsole.Log("Stopped tracking " + identifier);
             _subStatus = Status.Inactive;
         }
 
         void Update()
         {
             if (_subStatus == Status.Inactive)
+            {
                 return;
+            }
             Int64 trackingTimestamp = irToolTracking.GetTimestamp();
             float[] tool_transform = irToolTracking.GetToolTransform(identifier);
-
             if (tool_transform[7]!=0)
             {
-                gameObject.tag = "InTrack";
+                tag = "InTrack";
             }
             else
             {
-                gameObject.tag = "LoseTrack";
+                tag = "LoseTrack";
             }
-
+            // debugConsole.Log("tracking status: " + irToolTracking.GetTrackingStatus());
+            // debugConsole.Log("tool_transform: " + tool_transform);
             if (tool_transform != null && tool_transform[0]!= float.NaN && tool_transform[7]!=0 && lastUpdate<trackingTimestamp)
             {
                 if (!childrenActive)
