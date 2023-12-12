@@ -143,7 +143,7 @@ PrefabInstance:
     - target: {fileID: 2648170718386304434, guid: 36953faad8e61f440875d99f2c775f43,
         type: 3}
       propertyPath: m_Text
-      value: 192.168.1.23
+      value: 10.203.192.59
       objectReference: {fileID: 0}
     - target: {fileID: 7765440369400264882, guid: 36953faad8e61f440875d99f2c775f43,
         type: 3}
@@ -375,6 +375,7 @@ MonoBehaviour:
   max_occluded_spheres: 0
   lowpass_factor_rotation: 0.3
   lowpass_factor_position: 0.6
+  memoryBuffer: []
 --- !u!1 &291979080
 GameObject:
   m_ObjectHideFlags: 0
@@ -1529,6 +1530,7 @@ MonoBehaviour:
   max_occluded_spheres: 0
   lowpass_factor_rotation: 0.3
   lowpass_factor_position: 0.6
+  memoryBuffer: []
 --- !u!1 &1312817297
 GameObject:
   m_ObjectHideFlags: 0
@@ -2351,6 +2353,7 @@ MonoBehaviour:
   max_occluded_spheres: 0
   lowpass_factor_rotation: 0.3
   lowpass_factor_position: 0.6
+  memoryBuffer: []
 --- !u!1 &1800955920
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,6 +35,7 @@ namespace IRToolTrack
         {
             get { return spheres.Length; }
         }
+        public List<Vector3> memoryBuffer = new List<Vector3>();
 
         public float[] sphere_positions
         {
@@ -111,6 +112,29 @@ namespace IRToolTrack
             _subStatus = Status.Inactive;
         }
 
+        public bool GetTrackingStatus(float[] tool_transform)
+        {
+            Vector3 tool_translation = new Vector3(tool_transform[0], tool_transform[1], tool_transform[2]);
+            if (memoryBuffer.Count < 30)
+            {
+                memoryBuffer.Add(tool_translation);
+                return true;
+            }
+            else
+            {
+                memoryBuffer.RemoveAt(0);
+                memoryBuffer.Add(tool_translation);
+                if (Vector3.Distance(memoryBuffer[memoryBuffer.Count - 1], memoryBuffer[0]) == 0)
+                {
+                    return false;
+                }
+                else
+                { 
+                    return true;
+                }              
+            }
+        }
+
         void Update()
         {
             if (_subStatus == Status.Inactive)
@@ -119,7 +143,7 @@ namespace IRToolTrack
             }
             Int64 trackingTimestamp = irToolTracking.GetTimestamp();
             float[] tool_transform = irToolTracking.GetToolTransform(identifier);
-            if (tool_transform[7]!=0)
+            if (GetTrackingStatus(tool_transform))
             {
                 tag = "InTrack";
             }
