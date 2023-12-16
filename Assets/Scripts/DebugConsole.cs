@@ -7,7 +7,7 @@ public class DebugConsole : MonoBehaviour
 {
     public bool isDebugMode = true;
     public TMP_Text debugText;
-    public int maxLines = 16; // Adjust this to set the maximum number of lines to show
+    public int maxLines = 6; // Adjust this to set the maximum number of lines to show
 
     private Queue<string> messages = new Queue<string>();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Text;
+using UnityEngine.AI;
 
 public class SampleProcess : MonoBehaviour
 {
@@ -41,9 +42,16 @@ public class SampleProcess : MonoBehaviour
         return tool_coordinates;
     }
 
-    private void UpdateToolCoordinates(GameObject tool, byte[] poseMessage)
+    private void UpdateToolCoordinates(GameObject tool)
     {
+        byte[] poseMessage = SubBuffer.GetMessage(tool.name);
         string poseString = Encoding.UTF8.GetString(poseMessage);
+        // debugConsole.Log(poseString.Split(',').ToString());
+        if (tool.tag == "InTrack" || poseString.Split(',').Length < 7)
+        {   // do not update when the message is not complete
+            // debugConsole.Log(tool.name+":"+"Pose message is not complete");
+            return;
+        }
         float[] toolCoordinates = poseString.Split(',').Select(float.Parse).ToArray();
         Vector3 position = new Vector3(toolCoordinates[0], toolCoordinates[1], toolCoordinates[2]);
         Quaternion rotation = new Quaternion(toolCoordinates[3], toolCoordinates[4], toolCoordinates[5], toolCoordinates[6]);
@@ -79,12 +87,14 @@ public class SampleProcess : MonoBehaviour
         {
             for (int i = 0; i < tool_count; i++)
             {
-                string topic = topics[i];
+                // string topic = topics[i];
+                string topic = tools[i].name;
                 //Get the message from the topic "topic2" (here is string
                 message = SubBuffer.GetMessage(topic);
                 //Convert the byte[] to your datatype (here is string) and print it in debugConsole.
                 debugConsole.Log(Encoding.UTF8.GetString(message));
-                UpdateToolCoordinates(tools[i], message);
+                // debugConsole.Log(topic);
+                UpdateToolCoordinates(tools[i]);
             }
             
         }
