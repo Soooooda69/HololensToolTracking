@@ -11,6 +11,7 @@ namespace IRToolTrack
     public class MarkerManager : MonoBehaviour
     {
         public string Config_Path;
+        public float indicator_y_offset = 0.05f;
 
         void Start()
         {
@@ -27,13 +28,13 @@ namespace IRToolTrack
 
         private void LoadAndCreateMarkers(string[] jsonFiles)
         {
-            int fid_idx = 0;
-            float x_mean = 0.0f;
-            float y_mean = 0.0f;
-            float z_mean = 0.0f;
-
+            
             foreach (var jsonFile in jsonFiles)
             {
+                int fid_idx = 0;
+                float x_mean = 0.0f;
+                float y_mean = 0.0f;
+                float z_mean = 0.0f;
                 string jsonText = File.ReadAllText(jsonFile);
                 Debug.LogWarning($"File name: {jsonFile}");
                 MarkerConfig config = JsonUtility.FromJson<MarkerConfig>(jsonText);
@@ -51,6 +52,7 @@ namespace IRToolTrack
                     Debug.LogError("Prefab could not be loaded. Check the path.");
                 }
                 GameObject markerInstance = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
+                
                 IRToolController IRToolController_Instance = markerInstance.AddComponent<IRToolController>();
                 IRToolController_Instance.identifier = config.identifier;
 
@@ -74,7 +76,20 @@ namespace IRToolTrack
                 Transform pivotTransform = markerInstance.transform.Find("model");
                 pivotTransform.localPosition = new Vector3(config.pivot.x - x_mean, config.pivot.y - y_mean, config.pivot.z - z_mean);
                 pivotTransform.localRotation = Quaternion.Euler(config.pivot.rx, config.pivot.ry, config.pivot.rz);
-                fid_idx = 0;
+                GameObject indicator = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                indicator.name = "indicator";
+                indicator.transform.SetParent(markerInstance.transform);
+                indicator.transform.localPosition = new Vector3(0.0f, indicator_y_offset, 0.0f);
+                indicator.transform.localScale = new Vector3(config.scale/2, config.scale/2, config.scale/2);
+                // indicator.transform.SetParent(markerInstance.transform, true);
+                Renderer sphereRenderer = indicator.GetComponent<Renderer>();
+
+                // Change the color of the material
+                if (sphereRenderer != null)
+                {
+                    sphereRenderer.material.color = Color.red; // Change to red color
+                }
+
                 foreach (var fiducial in config.fiducials)
                 {
                     string fiducialName = "Sphere" + fid_idx.ToString();

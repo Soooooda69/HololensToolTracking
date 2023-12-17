@@ -20,6 +20,7 @@ namespace IRToolTrack
         public int max_occluded_spheres = 0;
         public float lowpass_factor_rotation = 0.3f;
         public float lowpass_factor_position = 0.6f;
+
         
         private bool childrenActive = true;
 
@@ -31,6 +32,7 @@ namespace IRToolTrack
         private List<Vector3> positions = new List<Vector3>();
         private List<Quaternion> rotations = new List<Quaternion>();
         private bool[] childAtIndexActive;
+        private float indicator_y_offset = 0.05f;
         public int sphere_count
         {
             get { return spheres.Length; }
@@ -171,6 +173,17 @@ namespace IRToolTrack
                 Quaternion q = new Quaternion(tool_transform[3], tool_transform[4], tool_transform[5], tool_transform[6]);
                 targetRotation = q;
                 targetPosition = new Vector3(tool_transform[0], tool_transform[1], tool_transform[2]);
+                GameObject indicator = transform.Find("indicator").gameObject;
+                indicator.transform.position = new Vector3(tool_transform[0], tool_transform[1] + indicator_y_offset, tool_transform[2]);
+                Renderer indicator_renderer = indicator.GetComponent<Renderer>();
+                if (tag == "InTrack")
+                {
+                    indicator_renderer.material.color = Color.green;
+                }
+                else
+                {
+                    indicator_renderer.material.color = Color.red;
+                }
                 lastSpotted = Time.time;
             }
             else if (childrenActive && disableWhenTrackingLost && Time.time-lastSpotted>secondsLostUntilDisable)

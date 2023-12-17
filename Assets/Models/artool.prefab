@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3062772029325338286}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.35401794, y: 0.074055, z: 0.269986}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.012999999, y: 0.012999999, z: 0.012999999}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -107,7 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6654877482281223570}
   m_Layer: 0
-  m_Name: tool_11
+  m_Name: artool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8defea86dd9b0294397309ce4a8144c4,
         type: 3}
       propertyPath: m_Name
-      value: artool
+      value: model
       objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 8defea86dd9b0294397309ce4a8144c4,
         type: 3}
