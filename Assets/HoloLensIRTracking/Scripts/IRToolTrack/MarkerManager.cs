@@ -16,17 +16,18 @@ namespace IRToolTrack
         void Start()
         {
             // Ensure the directory exists
-            if (!Directory.Exists(Config_Path))
+            /*if (!Directory.Exists(Config_Path))
             {
                 Debug.LogError("Directory does not exist: " + Config_Path);
                 return;
-            }
+            }*/
             //irToolController = FindObjectOfType<IRToolController>();
-            string[] jsonFiles = Directory.GetFiles(Config_Path, "*.json");
+            //string[] jsonFiles = Directory.GetFiles(Config_Path, "*.json");
+            TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>(Config_Path);
             LoadAndCreateMarkers(jsonFiles);
         }
 
-        private void LoadAndCreateMarkers(string[] jsonFiles)
+        private void LoadAndCreateMarkers(TextAsset[] jsonFiles)
         {
             
             foreach (var jsonFile in jsonFiles)
@@ -35,8 +36,8 @@ namespace IRToolTrack
                 float x_mean = 0.0f;
                 float y_mean = 0.0f;
                 float z_mean = 0.0f;
-                string jsonText = File.ReadAllText(jsonFile);
-                Debug.LogWarning($"File name: {jsonFile}");
+                string jsonText = jsonFile.text;
+                Debug.Log($"File name: {jsonFile.name}");
                 MarkerConfig config = JsonUtility.FromJson<MarkerConfig>(jsonText);
 
                 foreach (var fiducial in config.fiducials)
@@ -45,7 +46,7 @@ namespace IRToolTrack
                     y_mean += fiducial.y / config.count;
                     z_mean += fiducial.z / config.count;
                 }
-                Debug.LogWarning($"{config.path}");
+                Debug.Log($"{config.path}");
                 GameObject prefab = Resources.Load<GameObject>(config.path);
                 if (prefab == null)
                 {
