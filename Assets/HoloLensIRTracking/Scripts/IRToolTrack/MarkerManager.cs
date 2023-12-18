@@ -10,33 +10,38 @@ namespace IRToolTrack
 
     public class MarkerManager : MonoBehaviour
     {
-        public string Config_Path;
+        public string Config_Resources_Path;
         public float indicator_y_offset = 0.05f;
 
         void Start()
         {
             // Ensure the directory exists
-            if (!Directory.Exists(Config_Path))
+            /*if (!Directory.Exists(Config_Path))
             {
                 Debug.LogError("Directory does not exist: " + Config_Path);
                 return;
-            }
+            }*/
             //irToolController = FindObjectOfType<IRToolController>();
-            string[] jsonFiles = Directory.GetFiles(Config_Path, "*.json");
+            //string[] jsonFiles = Directory.GetFiles(Config_Path, "*.json");
+            TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>(Config_Resources_Path);
             LoadAndCreateMarkers(jsonFiles);
         }
 
-        private void LoadAndCreateMarkers(string[] jsonFiles)
+        private void LoadAndCreateMarkers(TextAsset[] jsonFiles)
         {
-            
+            int tool_count = jsonFiles.Length;
+            Debug.LogWarning($"Count: {jsonFiles.Length}");
+            GameObject[] tool_list = new GameObject[tool_count];
+            string[] topic_list = new string[tool_count];
+            int tool_idx = 0;
             foreach (var jsonFile in jsonFiles)
             {
                 int fid_idx = 0;
                 float x_mean = 0.0f;
                 float y_mean = 0.0f;
                 float z_mean = 0.0f;
-                string jsonText = File.ReadAllText(jsonFile);
-                Debug.LogWarning($"File name: {jsonFile}");
+                string jsonText = jsonFile.text;
+                Debug.Log($"File name: {jsonFile.name}");
                 MarkerConfig config = JsonUtility.FromJson<MarkerConfig>(jsonText);
 
                 foreach (var fiducial in config.fiducials)
@@ -45,7 +50,7 @@ namespace IRToolTrack
                     y_mean += fiducial.y / config.count;
                     z_mean += fiducial.z / config.count;
                 }
-                Debug.LogWarning($"{config.path}");
+                Debug.Log($"{config.path}");
                 GameObject prefab = Resources.Load<GameObject>(config.path);
                 if (prefab == null)
                 {
@@ -110,8 +115,16 @@ namespace IRToolTrack
                     }
                     fid_idx++;
                 }
-
                 IRToolController_Instance.spheres = createdSpheres;
+                tool_list[tool_idx] = markerInstance;
+                topic_list[tool_idx] = config.identifier;
+                tool_idx++;
+            }
+            SampleProcess Sample_Process_instance = GameObject.FindObjectOfType<SampleProcess>();
+            if (Sample_Process_instance != null)
+            {
+                Sample_Process_instance.tools = tool_list;
+                Sample_Process_instance.topics = topic_list;
             }
 
 
