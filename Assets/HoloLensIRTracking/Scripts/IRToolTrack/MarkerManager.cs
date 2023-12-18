@@ -10,7 +10,7 @@ namespace IRToolTrack
 
     public class MarkerManager : MonoBehaviour
     {
-        public string Config_Path;
+        public string Config_Resources_Path;
         public float indicator_y_offset = 0.05f;
 
         void Start()
@@ -23,13 +23,17 @@ namespace IRToolTrack
             }*/
             //irToolController = FindObjectOfType<IRToolController>();
             //string[] jsonFiles = Directory.GetFiles(Config_Path, "*.json");
-            TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>(Config_Path);
+            TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>(Config_Resources_Path);
             LoadAndCreateMarkers(jsonFiles);
         }
 
         private void LoadAndCreateMarkers(TextAsset[] jsonFiles)
         {
-            
+            int tool_count = jsonFiles.Length;
+            Debug.LogWarning($"Count: {jsonFiles.Length}");
+            GameObject[] tool_list = new GameObject[tool_count];
+            string[] topic_list = new string[tool_count];
+            int tool_idx = 0;
             foreach (var jsonFile in jsonFiles)
             {
                 int fid_idx = 0;
@@ -111,8 +115,16 @@ namespace IRToolTrack
                     }
                     fid_idx++;
                 }
-
                 IRToolController_Instance.spheres = createdSpheres;
+                tool_list[tool_idx] = markerInstance;
+                topic_list[tool_idx] = config.identifier;
+                tool_idx++;
+            }
+            SampleProcess Sample_Process_instance = GameObject.FindObjectOfType<SampleProcess>();
+            if (Sample_Process_instance != null)
+            {
+                Sample_Process_instance.tools = tool_list;
+                Sample_Process_instance.topics = topic_list;
             }
 
 
