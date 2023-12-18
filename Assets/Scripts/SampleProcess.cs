@@ -92,7 +92,25 @@ public class SampleProcess : MonoBehaviour
                 //Get the message from the topic "topic2" (here is string
                 message = SubBuffer.GetMessage(topic);
                 //Convert the byte[] to your datatype (here is string) and print it in debugConsole.
-                debugConsole.Log(Encoding.UTF8.GetString(message));
+                string poseString = Encoding.UTF8.GetString(message);
+                string[] poseValues = poseString.Split(',');
+                if (poseString.Split(',').Length < 7)
+                {   
+                    debugConsole.Log(poseString);
+                }
+                else
+                {
+                    string translationString = $"{poseValues[0]}, {poseValues[1]}, {poseValues[2]}";
+                    string logString = topic + ":" + translationString + ", " + tools[i].tag;
+                    debugConsole.Log(logString);
+                }
+                // string logString = topic + ":" + message + ", " + tools[i].tag;
+                // debugConsole.Log(poseString);
+                // float[] toolCoordinates = poseString.Split(',').Select(float.Parse).ToArray();
+                // Vector3 translation = new Vector3(toolCoordinates[0], toolCoordinates[1], toolCoordinates[2]);
+                // string translationString = translation.ToString();
+                // string logString = topic + ":" + translationString + ", " + tools[i].tag;
+                
                 // debugConsole.Log(topic);
                 UpdateToolCoordinates(tools[i]);
             }
