@@ -143,7 +143,9 @@ PrefabInstance:
     - target: {fileID: 2648170718386304434, guid: 36953faad8e61f440875d99f2c775f43,
         type: 3}
       propertyPath: m_Text
-      value: 192.168.1.24
+      value: '10.203.192.59
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 7765440369400264882, guid: 36953faad8e61f440875d99f2c775f43,
         type: 3}
@@ -2622,7 +2624,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c567e63b3b3492409db84389e4c958d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Config_Path: Assets/MarkerConfigs
+  Config_Resources_Path: 
+  indicator_y_offset: 0.05
 --- !u!1 &2011384724
 GameObject:
   m_ObjectHideFlags: 0
