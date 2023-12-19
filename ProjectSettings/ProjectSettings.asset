@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: BIGSS AR
-  productName: STTAR_MultiDevice
+  productName: Demo_MultiSTTAR
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -134,8 +134,9 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.2
+  bundleVersion: 0.4
   preloadedAssets:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -215,7 +216,7 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 11400000, guid: 60823fc2d09363c499f0789c10922e47, type: 2}
   - {fileID: 7923538589409489242, guid: 45b89a8293ac8924f9882b08a9098613, type: 2}
-  - {fileID: -7405519100350010473, guid: dc9fed8969f7fbf47b9c8e96ebb341c1, type: 2}
+  - {fileID: 1847073093793843767, guid: dc9fed8969f7fbf47b9c8e96ebb341c1, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 0
@@ -947,8 +948,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: MultiSTTAR
-  metroPackageVersion: 1.0.0.1
+  metroPackageName: DemoMultiSTTAR
+  metroPackageVersion: 1.0.0.4
   metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: BIGSS AR

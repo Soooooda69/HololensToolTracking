@@ -10,7 +10,7 @@ public class MarkerConfig
     public int count;
     public float scale;
     public Fiducial[] fiducials;
-    public Pivot pivot;
+    public Model model;
 }
 
 [Serializable]
@@ -22,7 +22,7 @@ public class Fiducial
 }
 
 [Serializable]
-public class Pivot
+public class Model
 {
     public float x;
     public float y;

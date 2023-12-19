@@ -174,15 +174,18 @@ namespace IRToolTrack
                 targetRotation = q;
                 targetPosition = new Vector3(tool_transform[0], tool_transform[1], tool_transform[2]);
                 GameObject indicator = transform.Find("indicator").gameObject;
-                indicator.transform.position = new Vector3(tool_transform[0], tool_transform[1] + indicator_y_offset, tool_transform[2]);
-                Renderer indicator_renderer = indicator.GetComponent<Renderer>();
-                if (tag == "InTrack")
+                if(indicator != null)
                 {
-                    indicator_renderer.material.color = Color.green;
-                }
-                else
-                {
-                    indicator_renderer.material.color = Color.red;
+                    indicator.transform.position = new Vector3(tool_transform[0], tool_transform[1] + indicator_y_offset, tool_transform[2]);
+                    Renderer indicator_renderer = indicator.GetComponent<Renderer>();
+                    if (tag == "InTrack")
+                    {
+                        indicator_renderer.material.color = Color.green;
+                    }
+                    else
+                    {
+                        indicator_renderer.material.color = Color.red;
+                    }
                 }
                 lastSpotted = Time.time;
             }
