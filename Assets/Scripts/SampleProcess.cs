@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using System.Text;
 using UnityEngine.AI;
+using UnityEngine.Scripting;
+using Unity.XR.CoreUtils;
 
 public class SampleProcess : MonoBehaviour
 {
@@ -55,8 +57,11 @@ public class SampleProcess : MonoBehaviour
         float[] toolCoordinates = poseString.Split(',').Select(float.Parse).ToArray();
         Vector3 position = new Vector3(toolCoordinates[0], toolCoordinates[1], toolCoordinates[2]);
         Quaternion rotation = new Quaternion(toolCoordinates[3], toolCoordinates[4], toolCoordinates[5], toolCoordinates[6]);
-        tool.transform.localPosition = position;
-        tool.transform.localRotation = rotation;
+        // tool.transform.localPosition = position;
+        // tool.transform.localRotation = rotation;
+        tool.transform.position = position;
+        tool.transform.rotation = rotation;
+
     }
 
     // Update is called once per frame
@@ -104,16 +109,24 @@ public class SampleProcess : MonoBehaviour
                     string logString = topic + ":" + translationString + ", " + tools[i].tag;
                     debugConsole.Log(logString);
                 }
-                // string logString = topic + ":" + message + ", " + tools[i].tag;
-                // debugConsole.Log(poseString);
-                // float[] toolCoordinates = poseString.Split(',').Select(float.Parse).ToArray();
-                // Vector3 translation = new Vector3(toolCoordinates[0], toolCoordinates[1], toolCoordinates[2]);
-                // string translationString = translation.ToString();
-                // string logString = topic + ":" + translationString + ", " + tools[i].tag;
-                
                 // debugConsole.Log(topic);
                 UpdateToolCoordinates(tools[i]);
+
+                GameObject indicator = tools[i].transform.Find("indicator").gameObject;
+                if(indicator != null)
+                {
+                    Renderer indicator_renderer = indicator.GetComponent<Renderer>();
+                    if (tools[i].tag == "InTrack")
+                    {
+                        indicator_renderer.material.color = Color.green;
+                    }
+                    else
+                    {
+                        indicator_renderer.material.color = Color.red;
+                    }
+                }
             }
+            
             
         }
         catch

@@ -32,7 +32,7 @@ namespace IRToolTrack
         private List<Vector3> positions = new List<Vector3>();
         private List<Quaternion> rotations = new List<Quaternion>();
         private bool[] childAtIndexActive;
-        private float indicator_y_offset = 0.05f;
+        // private float indicator_y_offset = 0.05f;
         public int sphere_count
         {
             get { return spheres.Length; }
@@ -145,14 +145,7 @@ namespace IRToolTrack
             }
             Int64 trackingTimestamp = irToolTracking.GetTimestamp();
             float[] tool_transform = irToolTracking.GetToolTransform(identifier);
-            if (GetTrackingStatus(tool_transform))
-            {
-                tag = "InTrack";
-            }
-            else
-            {
-                tag = "LoseTrack";
-            }
+            
             // debugConsole.Log("tracking status: " + irToolTracking.GetTrackingStatus());
             // debugConsole.Log("tool_transform: " + tool_transform);
             if (tool_transform != null && tool_transform[0]!= float.NaN && tool_transform[7]!=0 && lastUpdate<trackingTimestamp)
@@ -173,20 +166,20 @@ namespace IRToolTrack
                 Quaternion q = new Quaternion(tool_transform[3], tool_transform[4], tool_transform[5], tool_transform[6]);
                 targetRotation = q;
                 targetPosition = new Vector3(tool_transform[0], tool_transform[1], tool_transform[2]);
-                GameObject indicator = transform.Find("indicator").gameObject;
-                if(indicator != null)
-                {
-                    indicator.transform.position = new Vector3(tool_transform[0], tool_transform[1] + indicator_y_offset, tool_transform[2]);
-                    Renderer indicator_renderer = indicator.GetComponent<Renderer>();
-                    if (tag == "InTrack")
-                    {
-                        indicator_renderer.material.color = Color.green;
-                    }
-                    else
-                    {
-                        indicator_renderer.material.color = Color.red;
-                    }
-                }
+                // GameObject indicator = transform.Find("indicator").gameObject;
+                // if(indicator != null)
+                // {
+                //     indicator.transform.position = new Vector3(tool_transform[0], tool_transform[1] + indicator_y_offset, tool_transform[2]);
+                //     Renderer indicator_renderer = indicator.GetComponent<Renderer>();
+                //     if (tag == "InTrack")
+                //     {
+                //         indicator_renderer.material.color = Color.green;
+                //     }
+                //     else
+                //     {
+                //         indicator_renderer.material.color = Color.red;
+                //     }
+                // }
                 lastSpotted = Time.time;
             }
             else if (childrenActive && disableWhenTrackingLost && Time.time-lastSpotted>secondsLostUntilDisable)
@@ -212,8 +205,17 @@ namespace IRToolTrack
                 //transform.rotation = Quaternion.Lerp(targetRotation, transform.rotation, 0.5f);
             }
             */
-            transform.position = targetPosition;
-            transform.rotation = targetRotation;
+            if (GetTrackingStatus(tool_transform))
+            {
+                tag = "InTrack";
+                transform.position = targetPosition;
+                transform.rotation = targetRotation;
+            }
+            else
+            {
+                tag = "LoseTrack";
+
+            }
             lastUpdate = trackingTimestamp;
         }
     }

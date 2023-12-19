@@ -71,10 +71,11 @@ namespace IRToolTrack
 
                 Transform pivotTransform = markerInstance.transform.Find("model");
                 pivotTransform.localPosition = new Vector3(config.model.x, config.model.y, config.model.z);
-                pivotTransform.localRotation = Quaternion.Euler(config.model.rx, config.model.ry, config.model.rz);
+                Quaternion quat = Quaternion.Euler(config.model.rx, config.model.ry, config.model.rz);
+                pivotTransform.localRotation = quat;
                 if (use_indicator)
                 {
-                    GameObject indicator = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    GameObject indicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     indicator.name = "indicator";
                     indicator.transform.SetParent(markerInstance.transform);
                     indicator.transform.localPosition = new Vector3(0.0f, indicator_y_offset, 0.0f);
