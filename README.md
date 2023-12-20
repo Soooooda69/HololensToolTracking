@@ -45,3 +45,7 @@ A. Keller, HoloLens 2 Infrared Retro-Reflector Tracking. https://github.com/andr
 
 ```
 A. Martin-Gomez et al., “STTAR: Surgical Tool Tracking using Off-the-Shelf Augmented Reality Head-Mounted Displays,” IEEE Transactions on Visualization and Computer Graphics, pp. 1–16, 2023, doi: 10.1109/TVCG.2023.3238309.
+
+## Contributors
+* [Jiaming Zhang](https://github.com/jmz3)
+* [Hongchao Shu](https://github.com/Soooooda69)
