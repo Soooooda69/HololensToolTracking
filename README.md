@@ -1,21 +1,21 @@
-# On-Device HoloLens 2 IR Tracking Sample
+# On-Device HoloLens 2 Tool Tracking under Occlusion
 
-This project contains a sample scene showcasing how to track passive, retro-reflective IR sphere marker arrays using only the HoloLens 2 AHAT sensor.
+This project contains a sample scene showcasing multi-HoloLens tool tracking framework to adress the line-of-sight issue. It is enabled by the HoloLens 2 IR tracking pipeline and a PC-Devices communication framework based on TCP/IP.  
 
 
 ## How to use
-First make sure your HoloLens 2 is configured with research mode enabled.
-
-In the tracking sample scene, adjust the sphere positions under MixedRealityPlayspace->SampleTool->Sphere* so their local positions correspond to your own physical tracking array. If you have an array with a different amount of spheres, adjust the SampleTool GameObject accordingly. The default sphere radius is set as 6.5mm, if you are working with different sizes you need to adjust the number for best results. If you are working with flat markers, set the sphere radius to 0.
+First make sure your HoloLens 2 is configured with research mode enabled. To pre-define your tracking targets (marker geometries and 3d models), adjust or add your own geometry files in Asset->MarkerConfigs->*. In the CommunicationSample scene, adjust the Pub/Sub port, Sub IP adress and topics as you need, make sure they are paired with what you defined on your server. The useage of pose processing is described in [PoseHub](https://github.com/jmz3/PoseHub) module.
 
 To run this on the HoloLens2, simply build and deploy. Make sure to use Release settings for the final compile in Visual Studio.
 
+After configuring the connection parameters, simply press the connect button to initiate tracking and communication. Pose information and tracking status will then stream to the DebugConsole on your devices. The tracking status is intuitively represented by the color of the floating cubes, red indicating loss of tracking and green indicating successful tracking.
+
+## Demo
+We demonstrate a scenario in which the tool and phantom are initially obscured by an obstacle for the second viewer. However, with the additional tracking information provided by the first viewer, the lost tracking information is successfully recovered.
+
+![Alt Text](ar_demo.gif)
 ## Thanks
-Special thanks to Wenhao Gu for his hololens plugin project that this dll is based on: https://github.com/petergu684/HoloLens2-ResearchMode-Unity
-This project also makes use of a number of awesome open source libraries, including:
-* [opencv](https://github.com/opencv/opencv)
-* [libtiff](https://gitlab.com/libtiff/libtiff)
-* [zlib](https://github.com/madler/zlib)
+we greatly appreciate Mingxu Liu for his implementation of PC-Unity communication framework. Special thanks to the implementation of on-device IR tool tracking from andreaskeller96 https://github.com/andreaskeller96/HoloLens2-IRTracking-Sample.git.
 
 
 ## License and Citation

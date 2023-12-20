@@ -1,0 +1,3 @@
+[submodule "PoseHub"]
+	path = PoseHub
+	url = https://github.com/jmz3/PoseHub.git
